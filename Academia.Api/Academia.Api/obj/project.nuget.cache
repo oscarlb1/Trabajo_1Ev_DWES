@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "+bBwiKti1jQ=",
+  "dgSpecHash": "OCJJdOvwP9I=",
   "success": true,
-  "projectFilePath": "D:\\Oscar\\DESARROLLO_WEB_ENTORNO_SERVIDOR\\BibliotecaAPI\\Biblioteca.Api\\Biblioteca.Api.csproj",
+  "projectFilePath": "D:\\Oscar\\DESARROLLO_WEB_ENTORNO_SERVIDOR\\Academia.Api\\Academia.Api\\Academia.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\S2-PC00\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.6\\microsoft.aspnetcore.openapi.8.0.6.nupkg.sha512",
     "C:\\Users\\S2-PC00\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",

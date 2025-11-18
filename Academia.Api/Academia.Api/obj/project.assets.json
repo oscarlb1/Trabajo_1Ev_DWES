@@ -466,11 +466,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Oscar\\DESARROLLO_WEB_ENTORNO_SERVIDOR\\BibliotecaAPI\\Biblioteca.Api\\Biblioteca.Api.csproj",
-      "projectName": "Biblioteca.Api",
-      "projectPath": "D:\\Oscar\\DESARROLLO_WEB_ENTORNO_SERVIDOR\\BibliotecaAPI\\Biblioteca.Api\\Biblioteca.Api.csproj",
+      "projectUniqueName": "D:\\Oscar\\DESARROLLO_WEB_ENTORNO_SERVIDOR\\Academia.Api\\Academia.Api\\Academia.Api.csproj",
+      "projectName": "Academia.Api",
+      "projectPath": "D:\\Oscar\\DESARROLLO_WEB_ENTORNO_SERVIDOR\\Academia.Api\\Academia.Api\\Academia.Api.csproj",
       "packagesPath": "C:\\Users\\S2-PC00\\.nuget\\packages\\",
-      "outputPath": "D:\\Oscar\\DESARROLLO_WEB_ENTORNO_SERVIDOR\\BibliotecaAPI\\Biblioteca.Api\\obj\\",
+      "outputPath": "D:\\Oscar\\DESARROLLO_WEB_ENTORNO_SERVIDOR\\Academia.Api\\Academia.Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
