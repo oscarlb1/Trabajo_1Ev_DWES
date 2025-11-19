@@ -1,3 +1,13 @@
+CREATE DATABASE AcademiaDB;
+
+SELECT name, database_id, create_date 
+FROM sys.databases 
+WHERE name = 'AcademiaDB';
+
+USE AcademiaDB;
+
+
+
 CREATE TABLE Usuario (
     Id INT PRIMARY KEY IDENTITY(1,1),
     Nombre NVARCHAR(100) NOT NULL,
