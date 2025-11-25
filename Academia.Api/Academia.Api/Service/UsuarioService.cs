@@ -1,10 +1,6 @@
+using Academia.Api.Models;
 using Academia.Api.Models.DTO;
 using Academia.Api.Repositories;
-using Academia.Api.Models; // Asumo que el modelo Usuario está aquí o en Models
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System;
 
 namespace Academia.Api.Services
 {
@@ -19,10 +15,9 @@ namespace Academia.Api.Services
 
         public async Task<List<UsuarioDTO>> GetAllAsync()
         {
-
             var usuarios = await _usuarioRepository.GetAllAsync();
 
-            var usuariosDto = usuarios.Select(u => new UsuarioDTO
+            return usuarios.Select(u => new UsuarioDTO
             {
                 Id = u.Id,
                 Nombre = u.Nombre,
@@ -32,8 +27,6 @@ namespace Academia.Api.Services
                 Premium = u.Premium,
                 Registro = u.Registro
             }).ToList();
-
-            return usuariosDto;
         }
 
         public async Task<UsuarioDTO?> GetByIdAsync(int id)
@@ -44,15 +37,71 @@ namespace Academia.Api.Services
             var usuario = await _usuarioRepository.GetByIdAsync(id);
 
             if (usuario == null)
-            {
                 return null;
-            }
+
             return new UsuarioDTO
             {
                 Id = usuario.Id,
                 Nombre = usuario.Nombre,
                 Email = usuario.Email,
+                Creditos = usuario.Creditos,
+                Cursos = usuario.Cursos,
+                Premium = usuario.Premium,
+                Registro = usuario.Registro
             };
+        }
+
+        public async Task <UsuarioDTO> AddAsync(UsuarioCreateDTO usuarioCreateDto)
+        {
+            var usuario = new Usuario
+            {
+                Nombre = usuarioCreateDto.Nombre,
+                Email = usuarioCreateDto.Email,
+                Creditos = usuarioCreateDto.Creditos,
+                Cursos = usuarioCreateDto.Cursos,
+                Premium = usuarioCreateDto.Premium,
+                Registro = usuarioCreateDto.Registro
+            };
+
+            await _usuarioRepository.AddAsync(usuario);
+
+            return new UsuarioDTO
+            {
+                Id = usuario.Id, 
+                Nombre = usuario.Nombre,
+                Email = usuario.Email,
+                Creditos = usuario.Creditos,
+                Cursos = usuario.Cursos,
+                Premium = usuario.Premium,
+                Registro = usuario.Registro
+            };
+        }
+
+        public async Task UpdateAsync(UsuarioDTO usuarioDto)
+        {
+            if (usuarioDto.Id <= 0)
+                throw new ArgumentException("El ID debe ser mayor que cero.");
+
+            var usuario = new Usuario
+            {
+                Id = usuarioDto.Id,
+                Nombre = usuarioDto.Nombre,
+                Email = usuarioDto.Email,
+                Creditos = usuarioDto.Creditos,
+                Cursos = usuarioDto.Cursos,
+                Premium = usuarioDto.Premium,
+                Registro = usuarioDto.Registro
+            };
+
+            await _usuarioRepository.UpdateAsync(usuario);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            if (id <= 0)
+                throw new ArgumentException("El ID debe ser mayor que cero.");
+
+            await _usuarioRepository.DeleteAsync(id);
         }
     }
 }

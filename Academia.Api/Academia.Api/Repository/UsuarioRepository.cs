@@ -80,5 +80,71 @@ namespace Academia.Api.Repositories
             }
             return usuario; 
         }
+
+        public async Task<Usuario> AddAsync(Usuario usuario)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string query = "INSERT INTO Usuario (Nombre, Email, Creditos, Cursos, Premium, Registro) VALUES (@Nombre, @Email, @Creditos, @Cursos, @Premium, @Registro); SELECT CAST(scope_identity() AS int)";
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Nombre", usuario.Nombre);
+                    command.Parameters.AddWithValue("@Email", usuario.Email);
+                    command.Parameters.AddWithValue("@Creditos", usuario.Creditos);
+                    command.Parameters.AddWithValue("@Cursos", usuario.Cursos);
+                    command.Parameters.AddWithValue("@Premium", usuario.Premium);
+                    command.Parameters.AddWithValue("@Registro", usuario.Registro);
+
+                    var newId = await command.ExecuteScalarAsync();
+
+                    if (newId != null && newId != DBNull.Value)
+                        {
+                            usuario.Id = Convert.ToInt32(newId);
+                        }
+                }
+            }
+            return usuario;
+        }
+
+        public async Task UpdateAsync(Usuario usuario)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                string query = "UPDATE Usuario SET Nombre = @Nombre, Email = @Email, Creditos = @Creditos, Cursos = @Cursos, Premium = @Premium, Registro = @Registro WHERE Id = @Id";
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Nombre", usuario.Nombre);
+                    command.Parameters.AddWithValue("@Email", usuario.Email);
+                    command.Parameters.AddWithValue("@Creditos", usuario.Creditos);
+                    command.Parameters.AddWithValue("@Cursos", usuario.Cursos);
+                    command.Parameters.AddWithValue("@Premium", usuario.Premium);
+                    command.Parameters.AddWithValue("@Registro", usuario.Registro);
+
+                    command.Parameters.AddWithValue("@Id", usuario.Id);
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string query = "DELETE FROM Usuario WHERE Id = @Id";
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
     }
 }
