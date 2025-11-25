@@ -17,16 +17,16 @@ namespace Academia.Api.Services
         {
             var profesores = await _profesorRepository.GetAllAsync();
 
-            return profesores.Select(u => new ProfesorDTO
+            return profesores.Select(p => new ProfesorDTO
             {
-                Id = u.Id,
-                Nombre = u.Nombre,
-                Especialidad = u.Especialidad,
-                Salario = u.Salario,
-                Experiencia = u.Experiencia,
-                Certificado = u.Certificado,
-                Contrato = u.Contrato,
-                Email = u.Email
+                Id = p.Id,
+                Nombre = p.Nombre,
+                Especialidad = p.Especialidad,
+                Salario = p.Salario,
+                Experiencia = p.Experiencia,
+                Certificado = p.Certificado,
+                Contrato = p.Contrato,
+                Email = p.Email
             }).ToList();
         }
 
@@ -35,21 +35,21 @@ namespace Academia.Api.Services
             if (id <= 0)
                 throw new ArgumentException("El ID debe ser mayor que cero.");
 
-            var usuario = await _profesorRepository.GetByIdAsync(id);
+            var profesor = await _profesorRepository.GetByIdAsync(id);
 
-            if (usuario == null)
+            if (profesor == null)
                 return null;
 
             return new ProfesorDTO
             {
-                Id = usuario.Id,
-                Nombre = usuario.Nombre,
-                Especialidad = usuario.Especialidad,
-                Salario = usuario.Salario,
-                Experiencia = usuario.Experiencia,
-                Certificado = usuario.Certificado,
-                Contrato = usuario.Contrato,
-                Email = usuario.Email
+                Id = profesor.Id,
+                Nombre = profesor.Nombre,
+                Especialidad = profesor.Especialidad,
+                Salario = profesor.Salario,
+                Experiencia = profesor.Experiencia,
+                Certificado = profesor.Certificado,
+                Contrato = profesor.Contrato,
+                Email = profesor.Email
             };
         }
 
