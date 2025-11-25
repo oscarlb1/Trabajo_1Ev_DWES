@@ -7,6 +7,8 @@ var connectionString = builder.Configuration.GetConnectionString("AcademiaDB");
 
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IProfesorRepository, ProfesorRepository>();
+builder.Services.AddScoped<IProfesorService, ProfesorService>();
 
 // Add services to the container.
 
