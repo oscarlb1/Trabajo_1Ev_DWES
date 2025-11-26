@@ -64,7 +64,7 @@ namespace Academia.Api.Repositories
                     {
                         if (await reader.ReadAsync())
                         {
-                            profesor = new Profesor
+                            materia = new Materia
                             {
                                 Id = reader.GetInt32(0),
                                 Nombre = reader.GetString(1),
