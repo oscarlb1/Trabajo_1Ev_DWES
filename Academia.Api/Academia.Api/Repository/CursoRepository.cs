@@ -1,5 +1,5 @@
 using System.Data.SqlClient;
-
+using Academia.Api.Models;
 namespace Academia.Api.Repositories
 {
     public class CursoRepository : ICursoRepository
