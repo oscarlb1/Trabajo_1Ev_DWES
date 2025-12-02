@@ -37,8 +37,8 @@ namespace Academia.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<UsuarioDTO>> CreateUsuario(UsuarioCreateDTO usuarioCreateDto)
         {
-            await _usuarioService.AddAsync(usuarioCreateDto);
-            return CreatedAtAction(nameof(GetUsuario), new { id = usuarioCreateDto }, usuarioCreateDto);
+            var newUsuario = await _usuarioService.AddAsync(usuarioCreateDto);
+            return CreatedAtAction(nameof(GetUsuario), new { id = newUsuario.Id }, newUsuario);
         }
 
         [HttpPut("{id}")]

@@ -1,38 +1,6 @@
-version: '3.9'
+version: "3.9"
 
 services:
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - api
-    networks:
-      - backend
-      - frontend
-    restart: unless-stopped
-
-  api:
-    image: mcr.microsoft.com/dotnet/aspnet:8.0
-    container_name: dotnet_api
-    build:
-      context: ./api
-      dockerfile: Dockerfile
-    ports:
-      - "7663:5000"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=MyDB;User=sa;Password=tuContraseñaSegura(!)1234;
-    depends_on:
-      - sqlserver
-    volumes:
-      - ./api:/app
-    networks:
-      - backend
-    restart: unless-stopped
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -41,26 +9,55 @@ services:
       - "3667:1433"
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=tuContraseñaSegura(!)1234
-      - MSSQL_PID=Express
+      - MSSQL_SA_PASSWORD=tuContraseñaSegura1234$
     volumes:
       - sqlserver_data:/var/opt/mssql
     networks:
       - backend
     restart: unless-stopped
 
-  redis:
-    image: redis:latest
-    container_name: redis
+  db-init:
+    image: mcr.microsoft.com/mssql-tools
+    container_name: db_init
+    depends_on:
+      - sqlserver
+    networks:
+      - backend
+    volumes:
+      - ./createDbSqlServer.sql:/create.sql
+    entrypoint: >
+      /bin/bash -c "
+        echo 'Esperando SQL Server...';
+        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'tuContraseñaSegura1234$' -Q 'SELECT 1'
+        until [ $? -eq 0 ]; do
+          echo 'SQL no disponible, reintentando...';
+          sleep 5;
+          /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'tuContraseñaSegura1234$' -Q 'SELECT 1'
+        done;
+        echo 'SQL listo. Ejecutando script...';
+        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'tuContraseñaSegura1234$' -i /create.sql;
+      "
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dotnet_api
     ports:
-      - "6379:6379"
+      - "7663:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__AcademiaDB=Server=sqlserver,1433;Database=AcademiaDB;User Id=sa;Password=tuContraseñaSegura1234$;TrustServerCertificate=True;
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
     networks:
       - backend
     restart: unless-stopped
 
 networks:
   backend:
-  frontend:
 
 volumes:
   sqlserver_data:

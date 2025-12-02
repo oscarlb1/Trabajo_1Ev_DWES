@@ -37,8 +37,8 @@ namespace Academia.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<MateriaDTO>> CreateMateria(MateriaCreateDTO materiaCreateDTO)
         {
-            await _materiaService.AddAsync(materiaCreateDTO);
-            return CreatedAtAction(nameof(GetMateria), new { id = materiaCreateDTO }, materiaCreateDTO);
+            var newMateria = await _materiaService.AddAsync(materiaCreateDTO);
+            return CreatedAtAction(nameof(GetMateria), new { id = newMateria.Id }, newMateria);
         }
 
         [HttpPut("{id}")]
