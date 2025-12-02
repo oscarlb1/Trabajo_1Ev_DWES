@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 namespace Academia.Api.Models.DTO
 {
     public class InscripcionUpdateDTO
