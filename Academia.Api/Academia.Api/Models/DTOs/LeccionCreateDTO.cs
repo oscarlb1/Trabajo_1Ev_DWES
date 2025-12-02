@@ -1,6 +1,7 @@
-    public class Leccion
+namespace Academia.Api.Models.DTO
+{   
+    public class LeccionCreateDTO
     {
-        public int Id { get; set; }
         public string Titulo { get; set; } = string.Empty;
         public string Tipo { get; set; } = string.Empty;
         public int Minutos { get; set; }
@@ -9,3 +10,4 @@
         public string URL { get; set; } = string.Empty;
         public int CursoId { get; set; }
     }
+}

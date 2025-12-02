@@ -1,5 +1,3 @@
-namespace Academia.Api.Models
-{
     public class Curso
     {
         public int Id { get; set; }
@@ -16,4 +14,3 @@ namespace Academia.Api.Models
         
         public Curso() { }
     }
-}
