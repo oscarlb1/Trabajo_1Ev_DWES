@@ -1,3 +1,5 @@
+using Academia.Api.Models;
+
 namespace Academia.Api.Repositories
 {
     public interface ICursoRepository
