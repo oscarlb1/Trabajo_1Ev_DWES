@@ -1,4 +1,5 @@
 using Academia.Api.Models.DTO;
+using Academia.Api.Models.QueryParameters;
 using Academia.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +17,9 @@ namespace Academia.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<InscripcionDTO>>> GetInscripciones()
+        public async Task<ActionResult<List<InscripcionDTO>>> GetInscripciones([FromQuery] InscripcionParameters parameters)
         {
-            var inscripciones = await _inscripcionService.GetAllAsync();
+            var inscripciones = await _inscripcionService.GetAllAsync(parameters);
             return Ok(inscripciones);
         }
 

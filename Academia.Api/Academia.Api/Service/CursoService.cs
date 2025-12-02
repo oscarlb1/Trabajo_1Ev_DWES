@@ -1,5 +1,6 @@
 using Academia.Api.Models;
 using Academia.Api.Models.DTO;
+using Academia.Api.Models.QueryParameters;
 using Academia.Api.Repositories;
 
 namespace Academia.Api.Services
@@ -20,9 +21,17 @@ namespace Academia.Api.Services
             _materiaRepository = materiaRepository;   
         }
 
-        public async Task<List<CursoDTO>> GetAllAsync()
+        public async Task<List<CursoDTO>> GetAllAsync(CursoParameters parameters)
         {
-            var cursos = await _cursoRepository.GetAllAsync();
+            // Validaciones de parámetros
+            if (!string.IsNullOrEmpty(parameters.OrderBy) && 
+                parameters.OrderBy != "Horas" && 
+                parameters.OrderBy != "Costo")
+            {
+                throw new ArgumentException("El campo de ordenamiento no es válido. Use 'Horas' o 'Costo'.");
+            }
+
+            var cursos = await _cursoRepository.GetAllAsync(parameters);
 
             return cursos.Select(c => new CursoDTO
             {

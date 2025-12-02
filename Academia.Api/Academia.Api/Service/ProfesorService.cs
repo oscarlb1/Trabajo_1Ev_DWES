@@ -1,5 +1,6 @@
 using Academia.Api.Models;
 using Academia.Api.Models.DTO;
+using Academia.Api.Models.QueryParameters;
 using Academia.Api.Repositories;
 
 namespace Academia.Api.Services
@@ -13,9 +14,17 @@ namespace Academia.Api.Services
             _profesorRepository = profesorRepository;
         }
 
-        public async Task<List<ProfesorDTO>> GetAllAsync()
+        public async Task<List<ProfesorDTO>> GetAllAsync(ProfesorParameters parameters)
         {
-            var profesores = await _profesorRepository.GetAllAsync();
+            // Validacines de parámetros
+            if (!string.IsNullOrEmpty(parameters.OrderBy) && 
+                parameters.OrderBy != "Salario" && 
+                parameters.OrderBy != "Experiencia")
+            {
+                throw new ArgumentException("El campo de ordenamiento no es válido. Use 'Salario' o 'Experiencia'.");
+            }
+
+            var profesores = await _profesorRepository.GetAllAsync(parameters);
 
             return profesores.Select(p => new ProfesorDTO
             {

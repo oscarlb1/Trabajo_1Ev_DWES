@@ -1,4 +1,5 @@
 using Academia.Api.Models.DTO;
+using Academia.Api.Models.QueryParameters;
 using Academia.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +17,15 @@ namespace Academia.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ProfesorDTO>>> GetProfesores()
+        public async Task<ActionResult<List<ProfesorDTO>>> GetProfesores([FromQuery] ProfesorParameters parameters)
         {
-            var profesores = await _profesorService.GetAllAsync();
+            var profesores = await _profesorService.GetAllAsync(parameters);
+
+            if (profesores == null || profesores.Count == 0)
+            {
+                return NotFound();
+            }
+
             return Ok(profesores);
         }
 

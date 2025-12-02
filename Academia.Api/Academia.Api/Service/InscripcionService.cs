@@ -1,5 +1,6 @@
 using Academia.Api.Models;
 using Academia.Api.Models.DTO;
+using Academia.Api.Models.QueryParameters;
 using Academia.Api.Repositories;
 
 namespace Academia.Api.Services
@@ -13,9 +14,17 @@ namespace Academia.Api.Services
             _inscripcionRepository = inscripcionRepository;
         }
 
-        public async Task<List<InscripcionDTO>> GetAllAsync()
+        public async Task<List<InscripcionDTO>> GetAllAsync(InscripcionParameters parameters)
         {
-            var inscripciones = await _inscripcionRepository.GetAllAsync();
+            // Validaciones de parámetros
+            if (!string.IsNullOrEmpty(parameters.OrderBy) && 
+                parameters.OrderBy != "Nota" && 
+                parameters.OrderBy != "InscripcionFecha")
+            {
+                throw new ArgumentException("El campo de ordenamiento no es válido. Use 'Nota' o 'InscripcionFecha'.");
+            }
+
+            var inscripciones = await _inscripcionRepository.GetAllAsync(parameters);
 
             return inscripciones.Select(i => new InscripcionDTO
             {

@@ -13,9 +13,17 @@ namespace Academia.Api.Services
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task<List<UsuarioDTO>> GetAllAsync()
+        public async Task<List<UsuarioDTO>> GetAllAsync(Models.QueryParameters.UsuarioParameters parameters)
         {
-            var usuarios = await _usuarioRepository.GetAllAsync();
+            // Validaciones de parámetros
+            if (!string.IsNullOrEmpty(parameters.OrderBy) && 
+                parameters.OrderBy != "Registro" && 
+                parameters.OrderBy != "Creditos")
+            {
+                throw new ArgumentException("El campo de ordenamiento no es válido. Use 'Registro' o 'Creditos'.");
+            }
+
+            var usuarios = await _usuarioRepository.GetAllAsync(parameters);
 
             return usuarios.Select(u => new UsuarioDTO
             {

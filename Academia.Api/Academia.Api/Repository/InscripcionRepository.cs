@@ -1,4 +1,5 @@
 using System.Data.SqlClient;
+using Academia.Api.Models.QueryParameters;
 
 namespace Academia.Api.Repositories
 {
@@ -11,7 +12,7 @@ namespace Academia.Api.Repositories
             _connectionString = configuration.GetConnectionString("AcademiaDB") ?? "Not found";
         }
 
-        public async Task<List<Inscripcion>> GetAllAsync()
+        public async Task<List<Inscripcion>> GetAllAsync(InscripcionParameters parameters)
         {
             var inscripciones = new List<Inscripcion>();
 
@@ -20,9 +21,42 @@ namespace Academia.Api.Repositories
                 await connection.OpenAsync();
 
                 string query = "SELECT Id, Progreso, Comentario, Nota, Activa, Inscripcion, UsuarioId, CursoId FROM Inscripcion";
+                string whereClause = "";
+                string orderByClause = "";
+
+                // WHERE para el filtro por Progreso
+                if (!string.IsNullOrEmpty(parameters.Progreso))
+                {
+                    whereClause = " WHERE Progreso LIKE @Progreso";
+                }
+
+                // ORDER BY
+                if (!string.IsNullOrEmpty(parameters.OrderBy))
+                {
+                    string direction = parameters.SortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase) ? "DESC" : "ASC";
+
+                    // Por Nota
+                    if (parameters.OrderBy.Equals("Nota", StringComparison.OrdinalIgnoreCase))
+                    {
+                        orderByClause = $" ORDER BY Nota {direction}";
+                    }
+                    // Por Fecha de Inscripcion 
+                    else if (parameters.OrderBy.Equals("InscripcionFecha", StringComparison.OrdinalIgnoreCase))
+                    {
+                        orderByClause = $" ORDER BY Inscripcion {direction}";
+                    }
+                }
+
+                query += whereClause + orderByClause;
 
                 using (var command = new SqlCommand(query, connection))
                 {
+                    // Añadir parámetro SQL para el filtro WHERE
+                    if (!string.IsNullOrEmpty(parameters.Progreso))
+                    {
+                        command.Parameters.AddWithValue("@Progreso", $"%{parameters.Progreso}%");
+                    }
+
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
@@ -38,7 +72,6 @@ namespace Academia.Api.Repositories
                                 UsuarioId = reader.GetInt32(6),
                                 CursoId = reader.GetInt32(7)
                             };
-
                             inscripciones.Add(inscripcion);
                         }
                     }

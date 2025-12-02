@@ -1,5 +1,6 @@
 using Academia.Api.Models;
 using Academia.Api.Models.DTO;
+using Academia.Api.Models.QueryParameters;
 using Academia.Api.Repositories;
 
 namespace Academia.Api.Services
@@ -13,9 +14,17 @@ namespace Academia.Api.Services
             _materiaRepository = materiaRepository;
         }
 
-        public async Task<List<MateriaDTO>> GetAllAsync()
+        public async Task<List<MateriaDTO>> GetAllAsync(MateriaParameters parameters)
         {
-            var materias = await _materiaRepository.GetAllAsync();
+            // Validaciones de parámetros
+            if (!string.IsNullOrEmpty(parameters.OrderBy) && 
+                parameters.OrderBy != "Nivel" && 
+                parameters.OrderBy != "Cantidad")
+            {
+                throw new ArgumentException("El campo de ordenamiento no es válido. Use 'Nivel' o 'Cantidad'.");
+            }
+
+            var materias = await _materiaRepository.GetAllAsync(parameters);
 
             return materias.Select(m => new MateriaDTO
             {

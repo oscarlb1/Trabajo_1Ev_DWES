@@ -1,4 +1,5 @@
 using Academia.Api.Models.DTO;
+using Academia.Api.Models.QueryParameters;
 using Academia.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +17,9 @@ namespace Academia.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<CursoDTO>>> GetCursos()
+        public async Task<ActionResult<List<CursoDTO>>> GetCursos([FromQuery] CursoParameters parameters)
         {
-            var cursos = await _cursoService.GetAllAsync();
+            var cursos = await _cursoService.GetAllAsync(parameters);
             return Ok(cursos);
         }
 
