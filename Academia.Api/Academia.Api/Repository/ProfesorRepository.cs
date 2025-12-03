@@ -23,17 +23,19 @@ namespace Academia.Api.Repositories
                 string whereClause = "";
                 string orderByClause = "";
 
-                // 1. FILTRADO: Por Especialidad
+                // Por Especialidad
                 if (!string.IsNullOrEmpty(parameters.Especialidad))
                 {
                     whereClause = " WHERE Especialidad LIKE @Especialidad";
                 }
 
-                // 2. ORDENAMIENTO: Por Salario
+                // Por Salario
                 if (!string.IsNullOrEmpty(parameters.OrderBy) && parameters.OrderBy.Equals("Salario", StringComparison.OrdinalIgnoreCase))
                 {
-                    string direction = parameters.SortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase) ? "DESC" : "ASC";
-                    orderByClause = $" ORDER BY Salario {direction}";
+                    // Dirección del orden por defecto 
+                    const string defaultDirection = "ASC";
+
+                    orderByClause = $" ORDER BY Salario {defaultDirection}";
                 }
 
                 // Combina las partes de la query

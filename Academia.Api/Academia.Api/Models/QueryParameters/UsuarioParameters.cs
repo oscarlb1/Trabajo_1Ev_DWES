@@ -4,6 +4,5 @@ namespace Academia.Api.Models.QueryParameters
     {
         public string? Email { get; set; } = string.Empty; 
         public string? OrderBy { get; set; } = string.Empty; 
-        public string SortDirection { get; set; } = "asc"; 
     }
 }

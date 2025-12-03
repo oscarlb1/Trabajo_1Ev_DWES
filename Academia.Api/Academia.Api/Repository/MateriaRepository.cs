@@ -33,17 +33,18 @@ namespace Academia.Api.Repositories
                 // ORDER BY
                 if (!string.IsNullOrEmpty(parameters.OrderBy))
                 {
-                    string direction = parameters.SortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase) ? "DESC" : "ASC";
+                    // Dirección del orden por defecto 
+                    const string defaultDirection = "ASC";
 
                     // Por Nivel
                     if (parameters.OrderBy.Equals("Nivel", StringComparison.OrdinalIgnoreCase))
                     {
-                        orderByClause = $" ORDER BY Nivel {direction}";
+                        orderByClause = $" ORDER BY Nivel {defaultDirection}";
                     }
                     // Por Cantidad
                     else if (parameters.OrderBy.Equals("Cantidad", StringComparison.OrdinalIgnoreCase))
                     {
-                        orderByClause = $" ORDER BY Cantidad {direction}";
+                        orderByClause = $" ORDER BY Cantidad {defaultDirection}";
                     }
                 }
 

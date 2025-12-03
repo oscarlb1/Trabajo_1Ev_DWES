@@ -33,17 +33,18 @@ namespace Academia.Api.Repositories
                 // ORDER BY
                 if (!string.IsNullOrEmpty(parameters.OrderBy))
                 {
-                    string direction = parameters.SortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase) ? "DESC" : "ASC";
+                    // Dirección del orden por defecto 
+                    const string defaultDirection = "ASC";
 
                     // Por Nota
                     if (parameters.OrderBy.Equals("Nota", StringComparison.OrdinalIgnoreCase))
                     {
-                        orderByClause = $" ORDER BY Nota {direction}";
+                        orderByClause = $" ORDER BY Nota {defaultDirection}";
                     }
                     // Por Fecha de Inscripcion 
                     else if (parameters.OrderBy.Equals("InscripcionFecha", StringComparison.OrdinalIgnoreCase))
                     {
-                        orderByClause = $" ORDER BY Inscripcion {direction}";
+                        orderByClause = $" ORDER BY Inscripcion {defaultDirection}";
                     }
                 }
 
