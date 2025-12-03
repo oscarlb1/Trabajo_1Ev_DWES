@@ -1,4 +1,5 @@
 using Academia.Api.Models.DTO;
+using Academia.Api.Models.QueryParameters;
 using Academia.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +17,9 @@ namespace Academia.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<LeccionDTO>>> GetLecciones()
+        public async Task<ActionResult<List<LeccionDTO>>> GetLecciones([FromQuery] LeccionParameters parameters)
         {
-            var lecciones = await _leccionService.GetAllAsync();
+            var lecciones = await _leccionService.GetAllAsync(parameters);
             return Ok(lecciones);
         }
 
@@ -37,8 +38,8 @@ namespace Academia.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<LeccionDTO>> CreateLeccion(LeccionCreateDTO leccionCreateDTO)
         {
-            await _leccionService.AddAsync(leccionCreateDTO);
-            return CreatedAtAction(nameof(GetLeccion), new { id = leccionCreateDTO }, leccionCreateDTO);
+            var newLeccion = await _leccionService.AddAsync(leccionCreateDTO);
+            return CreatedAtAction(nameof(GetLeccion), new { id = newLeccion.Id }, newLeccion);
         }
 
         [HttpPut("{id}")]

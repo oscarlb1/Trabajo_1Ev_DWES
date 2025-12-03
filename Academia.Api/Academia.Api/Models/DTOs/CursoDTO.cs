@@ -3,10 +3,8 @@ namespace Academia.Api.Models.DTO
     public class CursoDTO
     {
         public int Id { get; set; }
-
         public string Titulo { get; set; } = string.Empty;
         public string Detalle { get; set; } = string.Empty;
-
         public decimal Costo { get; set; }
         public int Horas { get; set; }
         public bool Publicado { get; set; }

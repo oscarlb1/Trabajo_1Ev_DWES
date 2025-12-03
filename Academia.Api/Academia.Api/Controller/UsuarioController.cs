@@ -1,4 +1,5 @@
 using Academia.Api.Models.DTO;
+using Academia.Api.Models.QueryParameters;
 using Academia.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +17,9 @@ namespace Academia.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<UsuarioDTO>>> GetUsuarios()
+        public async Task<ActionResult<List<UsuarioDTO>>> GetUsuarios([FromQuery] UsuarioParameters parameters)
         {
-            var usuarios = await _usuarioService.GetAllAsync();
+            var usuarios = await _usuarioService.GetAllAsync(parameters);
             return Ok(usuarios);
         }
 
@@ -37,8 +38,8 @@ namespace Academia.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<UsuarioDTO>> CreateUsuario(UsuarioCreateDTO usuarioCreateDto)
         {
-            await _usuarioService.AddAsync(usuarioCreateDto);
-            return CreatedAtAction(nameof(GetUsuario), new { id = usuarioCreateDto }, usuarioCreateDto);
+            var newUsuario = await _usuarioService.AddAsync(usuarioCreateDto);
+            return CreatedAtAction(nameof(GetUsuario), new { id = newUsuario.Id }, newUsuario);
         }
 
         [HttpPut("{id}")]

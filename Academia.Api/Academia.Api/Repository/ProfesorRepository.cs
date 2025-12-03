@@ -1,5 +1,5 @@
 using System.Data.SqlClient;
-
+using Academia.Api.Models.QueryParameters;
 namespace Academia.Api.Repositories
 {
     public class ProfesorRepository : IProfesorRepository
@@ -11,7 +11,7 @@ namespace Academia.Api.Repositories
             _connectionString = configuration.GetConnectionString("AcademiaDB") ?? "Not found";
         }
 
-        public async Task<List<Profesor>> GetAllAsync()
+        public async Task<List<Profesor>> GetAllAsync(ProfesorParameters parameters)
         {
             var profesores = new List<Profesor>();
 
@@ -20,9 +20,44 @@ namespace Academia.Api.Repositories
                 await connection.OpenAsync();
 
                 string query = "SELECT Id, Nombre, Especialidad, Salario, Experiencia, Certificado, Contrato, Email FROM Profesor";
+                string whereClause = "";
+                string orderByClause = "";
+
+                // Por Especialidad
+                if (!string.IsNullOrEmpty(parameters.Especialidad))
+                {
+                    whereClause = " WHERE Especialidad LIKE @Especialidad";
+                }
+
+                // ORDER BY: Solo permite Salario o Experiencia
+                if (!string.IsNullOrEmpty(parameters.OrderBy))
+                {
+                    // Dirección del orden por defecto 
+                    const string defaultDirection = "ASC";
+
+                    // Por Salario 
+                    if (parameters.OrderBy.Equals("Salario", StringComparison.OrdinalIgnoreCase))
+                    {
+                        orderByClause = $" ORDER BY Salario {defaultDirection}";
+                    }
+                    // Por Experiencia
+                    else if (parameters.OrderBy.Equals("Experiencia", StringComparison.OrdinalIgnoreCase))
+                    {
+                        orderByClause = $" ORDER BY Experiencia {defaultDirection}";
+                    }
+                }
+
+                // Combina las partes de la query
+                query += whereClause + orderByClause;
 
                 using (var command = new SqlCommand(query, connection))
                 {
+                    // Añade el parámetro de filtro SQL
+                    if (!string.IsNullOrEmpty(parameters.Especialidad))
+                    {
+                        command.Parameters.AddWithValue("@Especialidad", $"%{parameters.Especialidad}%");
+                    }
+
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
@@ -38,7 +73,6 @@ namespace Academia.Api.Repositories
                                 Contrato = reader.GetDateTime(6),
                                 Email = reader.GetString(7)
                             };
-
                             profesores.Add(profe);
                         }
                     }

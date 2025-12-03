@@ -1,6 +1,8 @@
-public class Inscripcion
+using System.ComponentModel.DataAnnotations;
+namespace Academia.Api.Models.DTO
+{
+    public class InscripcionUpdateDTO
     {
-        public int Id { get; set; }
         public string Progreso { get; set; } = string.Empty;
         public string? Comentario { get; set; }
         public decimal Nota { get; set; }
@@ -9,3 +11,4 @@ public class Inscripcion
         public int UsuarioId { get; set; }
         public int CursoId { get; set; }
     }
+}

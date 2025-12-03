@@ -1,5 +1,6 @@
 using System.Data.SqlClient;
 using Academia.Api.Models;
+using Academia.Api.Models.QueryParameters;
 namespace Academia.Api.Repositories
 {
     public class CursoRepository : ICursoRepository
@@ -11,7 +12,7 @@ namespace Academia.Api.Repositories
             _connectionString = configuration.GetConnectionString("AcademiaDB") ?? "Not found";
         }
 
-        public async Task<List<Curso>> GetAllAsync()
+        public async Task<List<Curso>> GetAllAsync(CursoParameters parameters)
         {
             var cursos = new List<Curso>();
 
@@ -20,9 +21,43 @@ namespace Academia.Api.Repositories
                 await connection.OpenAsync();
 
                 string query = "SELECT Id, Titulo, Detalle, Costo, Horas, Publicado, Creacion, ProfesorId, MateriaId FROM Curso";
+                string whereClause = "";
+                string orderByClause = "";
+
+                // WHERE para el filtro por Título
+                if (!string.IsNullOrEmpty(parameters.Titulo))
+                {
+                    whereClause = " WHERE Titulo LIKE @Titulo";
+                }
+
+                // ORDER BY
+                if (!string.IsNullOrEmpty(parameters.OrderBy))
+                {
+                    // Dirección del orden por defecto 
+                    const string defaultDirection = "ASC";
+
+                    // Por Horas
+                    if (parameters.OrderBy.Equals("Horas", StringComparison.OrdinalIgnoreCase))
+                    {
+                        orderByClause = $" ORDER BY Horas {defaultDirection}";
+                    }
+                    // Por Costo
+                    else if (parameters.OrderBy.Equals("Costo", StringComparison.OrdinalIgnoreCase))
+                    {
+                        orderByClause = $" ORDER BY Costo {defaultDirection}";
+                    }
+                }
+
+                query += whereClause + orderByClause;
 
                 using (var command = new SqlCommand(query, connection))
                 {
+                    // Añadir parámetro SQL para el filtro WHERE
+                    if (!string.IsNullOrEmpty(parameters.Titulo))
+                    {
+                        command.Parameters.AddWithValue("@Titulo", $"%{parameters.Titulo}%");
+                    }
+
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
@@ -39,7 +74,6 @@ namespace Academia.Api.Repositories
                                 ProfesorId = reader.GetInt32(7),
                                 MateriaId = reader.GetInt32(8)
                             };
-
                             cursos.Add(curso);
                         }
                     }

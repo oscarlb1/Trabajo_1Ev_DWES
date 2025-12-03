@@ -1,4 +1,5 @@
 using System.Data.SqlClient;
+using Academia.Api.Models.QueryParameters;
 
 namespace Academia.Api.Repositories
 {
@@ -11,7 +12,7 @@ namespace Academia.Api.Repositories
             _connectionString = configuration.GetConnectionString("AcademiaDB") ?? "Not found";
         }
 
-        public async Task<List<Leccion>> GetAllAsync()
+        public async Task<List<Leccion>> GetAllAsync(LeccionParameters parameters)
         {
             var lecciones = new List<Leccion>();
 
@@ -20,9 +21,43 @@ namespace Academia.Api.Repositories
                 await connection.OpenAsync();
 
                 string query = "SELECT Id, Titulo, Tipo, Minutos, Examen, Publicacion, URL, CursoId FROM Leccion";
+                string whereClause = "";
+                string orderByClause = "";
+
+                // WHERE para el filtro por Tipo
+                if (!string.IsNullOrEmpty(parameters.Tipo))
+                {
+                    whereClause = " WHERE Tipo LIKE @Tipo";
+                }
+
+                // ORDER BY
+                if (!string.IsNullOrEmpty(parameters.OrderBy))
+                {
+                    // Dirección del orden por defecto 
+                    const string defaultDirection = "ASC";
+
+                    // Por Publicacion
+                    if (parameters.OrderBy.Equals("Publicacion", StringComparison.OrdinalIgnoreCase))
+                    {
+                        orderByClause = $" ORDER BY Publicacion {defaultDirection}";
+                    }
+                    // Por Minutos
+                    else if (parameters.OrderBy.Equals("Minutos", StringComparison.OrdinalIgnoreCase))
+                    {
+                        orderByClause = $" ORDER BY Minutos {defaultDirection}";
+                    }
+                }
+
+                query += whereClause + orderByClause;
 
                 using (var command = new SqlCommand(query, connection))
                 {
+                    // Añadir parámetro SQL para el filtro WHERE
+                    if (!string.IsNullOrEmpty(parameters.Tipo))
+                    {
+                        command.Parameters.AddWithValue("@Tipo", $"%{parameters.Tipo}%");
+                    }
+
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
@@ -38,7 +73,6 @@ namespace Academia.Api.Repositories
                                 URL = reader.GetString(6),
                                 CursoId = reader.GetInt32(7)
                             };
-
                             lecciones.Add(leccion);
                         }
                     }

@@ -1,4 +1,5 @@
 using System.Data.SqlClient;
+using Academia.Api.Models.QueryParameters;
 
 namespace Academia.Api.Repositories
 {
@@ -11,7 +12,7 @@ namespace Academia.Api.Repositories
             _connectionString = configuration.GetConnectionString("AcademiaDB") ?? "Not found";
         }
 
-        public async Task<List<Materia>> GetAllAsync()
+        public async Task<List<Materia>> GetAllAsync(MateriaParameters parameters)
         {
             var materias = new List<Materia>();
 
@@ -20,9 +21,43 @@ namespace Academia.Api.Repositories
                 await connection.OpenAsync();
 
                 string query = "SELECT Id, Nombre, Detalle, Nivel, Cantidad, Obligatoria, Creacion FROM Materia";
+                string whereClause = "";
+                string orderByClause = "";
+
+                // WHERE para el filtro por Detalle
+                if (!string.IsNullOrEmpty(parameters.Detalle))
+                {
+                    whereClause = " WHERE Detalle LIKE @Detalle";
+                }
+
+                // ORDER BY
+                if (!string.IsNullOrEmpty(parameters.OrderBy))
+                {
+                    // Dirección del orden por defecto 
+                    const string defaultDirection = "ASC";
+
+                    // Por Nivel
+                    if (parameters.OrderBy.Equals("Nivel", StringComparison.OrdinalIgnoreCase))
+                    {
+                        orderByClause = $" ORDER BY Nivel {defaultDirection}";
+                    }
+                    // Por Cantidad
+                    else if (parameters.OrderBy.Equals("Cantidad", StringComparison.OrdinalIgnoreCase))
+                    {
+                        orderByClause = $" ORDER BY Cantidad {defaultDirection}";
+                    }
+                }
+
+                query += whereClause + orderByClause;
 
                 using (var command = new SqlCommand(query, connection))
                 {
+                    // Añadir parámetro SQL para el filtro WHERE
+                    if (!string.IsNullOrEmpty(parameters.Detalle))
+                    {
+                        command.Parameters.AddWithValue("@Detalle", $"%{parameters.Detalle}%");
+                    }
+
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
@@ -37,7 +72,6 @@ namespace Academia.Api.Repositories
                                 Obligatoria = reader.GetBoolean(5),
                                 Creacion = reader.GetDateTime(6)
                             };
-
                             materias.Add(materia);
                         }
                     }

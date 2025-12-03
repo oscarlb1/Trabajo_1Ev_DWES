@@ -1,4 +1,5 @@
 using System.Data.SqlClient;
+using Academia.Api.Models.QueryParameters;
 
 namespace Academia.Api.Repositories
 {
@@ -11,7 +12,7 @@ namespace Academia.Api.Repositories
             _connectionString = configuration.GetConnectionString("AcademiaDB") ?? "Not found";
         }
 
-        public async Task<List<Usuario>> GetAllAsync()
+        public async Task<List<Usuario>> GetAllAsync(UsuarioParameters parameters)
         {
             var usuarios = new List<Usuario>();
 
@@ -20,9 +21,43 @@ namespace Academia.Api.Repositories
                 await connection.OpenAsync();
 
                 string query = "SELECT Id, Nombre, Email, Creditos, Cursos, Premium, Registro FROM Usuario";
+                string whereClause = "";
+                string orderByClause = "";
+
+                // WHERE para el filtro por Email
+                if (!string.IsNullOrEmpty(parameters.Email))
+                {
+                    whereClause = " WHERE Email LIKE @Email";
+                }
+
+                // ORDER BY
+                if (!string.IsNullOrEmpty(parameters.OrderBy))
+                {
+                    // Dirección del orden por defecto 
+                    const string defaultDirection = "ASC";
+
+                    // Por Registro
+                    if (parameters.OrderBy.Equals("Registro", StringComparison.OrdinalIgnoreCase))
+                    {
+                        orderByClause = $" ORDER BY Registro {defaultDirection}";
+                    }
+                    // Por Creditos
+                    else if (parameters.OrderBy.Equals("Creditos", StringComparison.OrdinalIgnoreCase))
+                    {
+                        orderByClause = $" ORDER BY Creditos {defaultDirection}";
+                    }
+                }
+
+                query += whereClause + orderByClause;
 
                 using (var command = new SqlCommand(query, connection))
                 {
+                    // Añadir parámetro SQL para el filtro WHERE
+                    if (!string.IsNullOrEmpty(parameters.Email))
+                    {
+                        command.Parameters.AddWithValue("@Email", $"%{parameters.Email}%");
+                    }
+
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
@@ -37,7 +72,6 @@ namespace Academia.Api.Repositories
                                 Premium = reader.GetBoolean(5),
                                 Registro = reader.GetDateTime(6)
                             };
-
                             usuarios.Add(user);
                         }
                     }

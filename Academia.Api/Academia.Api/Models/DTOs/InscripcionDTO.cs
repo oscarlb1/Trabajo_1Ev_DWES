@@ -1,4 +1,6 @@
-public class Inscripcion
+namespace Academia.Api.Models.DTO
+{
+    public class InscripcionDTO
     {
         public int Id { get; set; }
         public string Progreso { get; set; } = string.Empty;
@@ -9,3 +11,4 @@ public class Inscripcion
         public int UsuarioId { get; set; }
         public int CursoId { get; set; }
     }
+}
