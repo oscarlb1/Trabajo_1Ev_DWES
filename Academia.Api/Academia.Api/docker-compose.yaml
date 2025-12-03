@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/mssql/server:2019-CU21-ubuntu-20.04
     container_name: sqlserver
     ports:
       - "3667:1433"

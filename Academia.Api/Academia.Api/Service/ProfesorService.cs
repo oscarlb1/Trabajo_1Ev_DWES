@@ -16,7 +16,7 @@ namespace Academia.Api.Services
 
         public async Task<List<ProfesorDTO>> GetAllAsync(ProfesorParameters parameters)
         {
-            // Validacines de parámetros
+            // Validaciones de parámetros
             if (!string.IsNullOrEmpty(parameters.OrderBy) && 
                 parameters.OrderBy != "Salario" && 
                 parameters.OrderBy != "Experiencia")
