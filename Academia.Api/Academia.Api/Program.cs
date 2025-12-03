@@ -25,7 +25,26 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Añadir servicios CORS (¡MOVIDO AQUÍ!)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            // Permitir cualquier origen (solución para desarrollo local)
+            policy.AllowAnyOrigin()
+            // Permitir cualquier método HTTP (GET, POST, PUT, DELETE)
+            .AllowAnyMethod()
+            // Permitir cualquier encabezado en la solicitud
+            .AllowAnyHeader();
+        });
+});
+
+
 var app = builder.Build();
+
+// ACTIVACIÓN DEL MIDDLEWARE CORS
+app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
