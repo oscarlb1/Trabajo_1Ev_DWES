@@ -7,7 +7,7 @@ namespace Academia.Api.Repositories
     {
         Task<List<Materia>> GetAllAsync(MateriaParameters parameters);
         Task<Materia?> GetByIdAsync(int id);
-        Task AddAsync(Materia materia);
+        Task <Materia>AddAsync(Materia materia);
         Task UpdateAsync(Materia materia);
         Task DeleteAsync(int id);
     }

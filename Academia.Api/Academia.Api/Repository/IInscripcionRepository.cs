@@ -7,7 +7,7 @@ namespace Academia.Api.Repositories
     {
         Task<List<Inscripcion>> GetAllAsync(InscripcionParameters parameters);
         Task<Inscripcion?> GetByIdAsync(int id);
-        Task AddAsync(Inscripcion inscripcion);
+        Task <Inscripcion>AddAsync(Inscripcion inscripcion);
         Task UpdateAsync(Inscripcion inscripcion);
         Task DeleteAsync(int id);
     }

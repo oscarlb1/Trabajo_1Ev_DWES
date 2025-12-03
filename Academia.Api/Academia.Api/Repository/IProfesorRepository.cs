@@ -6,7 +6,7 @@ namespace Academia.Api.Repositories
     {
         Task<List<Profesor>> GetAllAsync(ProfesorParameters parameters);
         Task<Profesor?> GetByIdAsync(int id);
-        Task AddAsync(Profesor profesor);
+        Task <Profesor>AddAsync(Profesor profesor);
         Task UpdateAsync(Profesor profesor);
         Task DeleteAsync(int id);
     }

@@ -16,29 +16,6 @@ services:
       - backend
     restart: unless-stopped
 
-  db-init:
-    image: mcr.microsoft.com/mssql-tools
-    container_name: db_init
-    depends_on:
-      - sqlserver
-    networks:
-      - backend
-    volumes:
-      - ./createDbSqlServer.sql:/create.sql
-    entrypoint: >
-      /bin/bash -c "
-        echo 'Esperando SQL Server...';
-        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'tuContraseñaSegura1234$' -Q 'SELECT 1'
-        until [ $? -eq 0 ]; do
-          echo 'SQL no disponible, reintentando...';
-          sleep 5;
-          /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'tuContraseñaSegura1234$' -Q 'SELECT 1'
-        done;
-        echo 'SQL listo. Ejecutando script...';
-        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'tuContraseñaSegura1234$' -i /create.sql;
-      "
-    restart: "no"
-
   api:
     build:
       context: .
@@ -50,8 +27,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__AcademiaDB=Server=sqlserver,1433;Database=AcademiaDB;User Id=sa;Password=tuContraseñaSegura1234$;TrustServerCertificate=True;
     depends_on:
-      db-init:
-        condition: service_completed_successfully
+      - sqlserver
     networks:
       - backend
     restart: unless-stopped
