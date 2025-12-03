@@ -29,13 +29,22 @@ namespace Academia.Api.Repositories
                     whereClause = " WHERE Especialidad LIKE @Especialidad";
                 }
 
-                // Por Salario
-                if (!string.IsNullOrEmpty(parameters.OrderBy) && parameters.OrderBy.Equals("Salario", StringComparison.OrdinalIgnoreCase))
+                // ORDER BY: Solo permite Salario o Experiencia
+                if (!string.IsNullOrEmpty(parameters.OrderBy))
                 {
                     // Dirección del orden por defecto 
                     const string defaultDirection = "ASC";
 
-                    orderByClause = $" ORDER BY Salario {defaultDirection}";
+                    // Por Salario 
+                    if (parameters.OrderBy.Equals("Salario", StringComparison.OrdinalIgnoreCase))
+                    {
+                        orderByClause = $" ORDER BY Salario {defaultDirection}";
+                    }
+                    // Por Experiencia
+                    else if (parameters.OrderBy.Equals("Experiencia", StringComparison.OrdinalIgnoreCase))
+                    {
+                        orderByClause = $" ORDER BY Experiencia {defaultDirection}";
+                    }
                 }
 
                 // Combina las partes de la query
