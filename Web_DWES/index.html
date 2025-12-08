@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administración - Academia</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- DataTables -->
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="bi bi-mortarboard"></i> Academia Admin</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('dashboard')"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('cursos')"><i class="bi bi-book"></i> Cursos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('usuarios')"><i class="bi bi-people"></i> Usuarios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('profesores')"><i class="bi bi-person-badge"></i> Profesores</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('materias')"><i class="bi bi-collection"></i> Materias</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('inscripciones')"><i class="bi bi-clipboard-check"></i> Inscripciones</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('lecciones')"><i class="bi bi-file-text"></i> Lecciones</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section-content">
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <h1><i class="bi bi-speedometer2"></i> Dashboard</h1>
+                    <p class="text-muted">Bienvenido al panel de administración de la Academia</p>
+                </div>
+            </div>
+            <div class="row" id="dashboardCards"></div>
+        </section>
+
+        <!-- Cursos Section -->
+        <section id="cursos" class="section-content" style="display:none;">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h1><i class="bi bi-book"></i> Gestión de Cursos</h1>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-success" onclick="openModal('curso')"><i class="bi bi-plus-circle"></i> Nuevo Curso</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-hover" id="cursosTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Título</th>
+                                <th>Costo</th>
+                                <th>Horas</th>
+                                <th>Profesor</th>
+                                <th>Materia</th>
+                                <th>Publicado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cursosList"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Usuarios Section -->
+        <section id="usuarios" class="section-content" style="display:none;">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h1><i class="bi bi-people"></i> Gestión de Usuarios</h1>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-success" onclick="openModal('usuario')"><i class="bi bi-plus-circle"></i> Nuevo Usuario</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-hover" id="usuariosTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Créditos</th>
+                                <th>Cursos</th>
+                                <th>Premium</th>
+                                <th>Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usuariosList"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profesores Section -->
+        <section id="profesores" class="section-content" style="display:none;">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h1><i class="bi bi-person-badge"></i> Gestión de Profesores</h1>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-success" onclick="openModal('profesor')"><i class="bi bi-plus-circle"></i> Nuevo Profesor</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-hover" id="profesoresTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Especialidad</th>
+                                <th>Email</th>
+                                <th>Experiencia</th>
+                                <th>Salario</th>
+                                <th>Certificado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="profesoresList"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Materias Section -->
+        <section id="materias" class="section-content" style="display:none;">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h1><i class="bi bi-collection"></i> Gestión de Materias</h1>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-success" onclick="openModal('materia')"><i class="bi bi-plus-circle"></i> Nueva Materia</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-hover" id="materiasTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Detalle</th>
+                                <th>Nivel</th>
+                                <th>Cantidad</th>
+                                <th>Obligatoria</th>
+                                <th>Creación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="materiasList"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inscripciones Section -->
+        <section id="inscripciones" class="section-content" style="display:none;">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h1><i class="bi bi-clipboard-check"></i> Gestión de Inscripciones</h1>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-success" onclick="openModal('inscripcion')"><i class="bi bi-plus-circle"></i> Nueva Inscripción</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-hover" id="inscripcionesTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Usuario</th>
+                                <th>Curso</th>
+                                <th>Progreso</th>
+                                <th>Nota</th>
+                                <th>Activa</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inscripcionesList"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lecciones Section -->
+        <section id="lecciones" class="section-content" style="display:none;">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h1><i class="bi bi-file-text"></i> Gestión de Lecciones</h1>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-success" onclick="openModal('leccion')"><i class="bi bi-plus-circle"></i> Nueva Lección</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-hover" id="leccionesTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Título</th>
+                                <th>Tipo</th>
+                                <th>Minutos</th>
+                                <th>Curso</th>
+                                <th>Examen</th>
+                                <th>Publicación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leccionesList"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal for Forms -->
+    <div class="modal fade" id="formModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalTitle">Nuevo Registro</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalBody"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="saveBtn" onclick="saveRecord()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+
+    <script src="app.js"></script>
+</body>
+</html>
