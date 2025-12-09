@@ -1,4 +1,5 @@
 using Academia.Api.Models.DTO;
+using Academia.Api.Models.QueryParameters;
 using Academia.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +23,19 @@ namespace Academia.Api.Controllers
             return Ok(opiniones);
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<ProfesorDTO>>> GetOpinionesParams([FromQuery] OpinionParameters parameters)
+        {
+            var opiniones = await _opinionService.GetAllAsyncParams(parameters);
+
+            if (opiniones == null || opiniones.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(opiniones);
+        }
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<OpinionDTO>> GetOpinion(int id)
         {

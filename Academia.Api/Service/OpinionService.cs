@@ -1,5 +1,6 @@
 using Academia.Api.Models;
 using Academia.Api.Models.DTO;
+using Academia.Api.Models.QueryParameters;
 using Academia.Api.Repositories;
 
 namespace Academia.Api.Services
@@ -21,6 +22,28 @@ namespace Academia.Api.Services
         public async Task<List<OpinionDTO>> GetAllAsync()
         {
             var opiniones = await _opinionRepository.GetAllAsync();
+
+            return opiniones.Select(o => new OpinionDTO
+            {
+                Id = o.Id,
+                Nombre = o.Nombre,
+                FechaComentario = o.FechaComentario,
+                Mensaje = o.Mensaje,
+                Puntuacion = o.Puntuacion,
+                CursoId = o.CursoId
+            }).ToList();
+        }
+
+        public async Task<List<OpinionDTO>> GetAllAsyncParams(OpinionParameters parameters)
+        {
+            // Validaciones de parámetros
+            if (!string.IsNullOrEmpty(parameters.OrderBy) && 
+                parameters.OrderBy != "Puntuacion")
+            {
+                throw new ArgumentException("El campo de ordenamiento no es válido. Use 'Puntuacion'.");
+            }
+
+            var opiniones = await _opinionRepository.GetAllAsyncParams(parameters);
 
             return opiniones.Select(o => new OpinionDTO
             {

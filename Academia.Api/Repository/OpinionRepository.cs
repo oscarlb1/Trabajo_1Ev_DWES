@@ -46,6 +46,69 @@ namespace Academia.Api.Repositories
             return opiniones;
         }
 
+        public async Task<List<Opinion>> GetAllAsyncParams(OpinionParameters parameters)
+        {
+            var opiniones = new List<Opinion>();
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string query = "SELECT Id, Nombre, FechaComentario, Mensaje, Puntuacion, CursoId FROM Opinion";
+                string whereClause = "";
+                string orderByClause = "";
+
+                // WHERE para el filtro por puntuacion
+                if (!string.IsNullOrEmpty(parameters.Puntuacion))
+                {
+                    whereClause = " WHERE Puntuacion LIKE @Puntuacion";
+                }
+
+                // ORDER BY
+                if (!string.IsNullOrEmpty(parameters.OrderBy))
+                {
+                    // Orden por defecto ascendente
+                    const string defaultDirection = "ASC";
+
+                    // Por Puntuacion
+                    if (parameters.OrderBy.Equals("Puntuacion", StringComparison.OrdinalIgnoreCase))
+                    {
+                        orderByClause = $" ORDER BY Puntuacion {defaultDirection}";
+                    }
+                    
+                }
+
+                query += whereClause + orderByClause;
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    // Añadir parámetro SQL para el filtro WHERE
+                    if (!string.IsNullOrEmpty(parameters.Puntuacion))
+                    {
+                        command.Parameters.AddWithValue("@Puntuacion", $"%{parameters.Puntuacion}%");
+                    }
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var opinion = new Opinion
+                            {
+                                Id = reader.GetInt32(0),
+                                Nombre = reader.GetString(1),
+                                FechaComentario = reader.GetDateTime(2),
+                                Mensaje = reader.GetString(3),
+                                Puntuacion = reader.GetInt32(4),
+                                CursoId = reader.GetInt32(5)
+                            };
+                            opiniones.Add(opinion);
+                        }
+                    }
+                }
+            }
+            return opiniones;
+        }
+
         public async Task<Opinion?> GetByIdAsync(int id)
         {
             Opinion? opinion = null; 
@@ -127,7 +190,7 @@ namespace Academia.Api.Repositories
                 }
             }
         }
-        
+
         public async Task DeleteAsync(int id)
         {
             using (var connection = new SqlConnection(_connectionString))
