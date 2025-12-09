@@ -17,6 +17,8 @@ builder.Services.AddScoped<ILeccionRepository, LeccionRepository>();
 builder.Services.AddScoped<ILeccionService, LeccionService>();
 builder.Services.AddScoped<IInscripcionRepository, InscripcionRepository>();
 builder.Services.AddScoped<IInscripcionService, InscripcionService>();
+builder.Services.AddScoped<IOpinionRepository, OpinionRepository>();
+builder.Services.AddScoped<IOpinionService, OpinionService>();
 
 
 // Add services to the container.

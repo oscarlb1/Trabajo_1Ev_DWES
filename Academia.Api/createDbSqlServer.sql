@@ -78,6 +78,21 @@ CREATE TABLE Inscripcion (
     FOREIGN KEY (CursoId) REFERENCES Curso(Id)
 );
 
+-- AUTORIA --
+CREATE TABLE Opinion (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Nombre NVARCHAR(50) NOT NULL,
+    FechaComentario DATETIME NOT NULL,
+    Mensaje NVARCHAR(250) NOT NULL,
+    Puntuacion INT NOT NULL,
+    CursoId INT NOT NULL,
+    FOREIGN KEY (CursoId) REFERENCES Curso(Id)
+);
+
+INSERT INTO Opinion (Nombre, FechaComentario, Mensaje, Puntuacion, CursoId) VALUES
+('Andrea Martínez', '2010-08-20 09:00:00', 'Me encanta este curso.', 4, 1),
+('Carlos Ruiz', '2010-08-20 09:00:00', 'Muy bueno este curso.', 5, 2);
+
 INSERT INTO Usuario (Nombre, Email, Creditos, Cursos, Premium, Registro) VALUES
 ('Andrea Martínez', 'andrea.martinez@email.com', 50.50, 2, 1, '2024-01-15 10:00:00'),
 ('Carlos Ruiz', 'carlos.ruiz@email.com', 10.00, 0, 0, '2024-03-01 15:30:00');
