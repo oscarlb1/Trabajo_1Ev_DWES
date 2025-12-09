@@ -58,7 +58,7 @@ namespace Academia.Api.Repositories
                 string whereClause = "";
                 string orderByClause = "";
 
-                // WHERE para el filtro por puntuacion
+                // WHERE para el filtro por puntuacion mínima
                 if (!string.IsNullOrEmpty(parameters.minPuntuacion))
                 {
                     whereClause = " WHERE Puntuacion > @Puntuacion";
@@ -70,10 +70,10 @@ namespace Academia.Api.Repositories
                     // Orden por defecto ascendente
                     const string defaultDirection = "ASC";
 
-                    // Por Puntuacion
-                    if (parameters.OrderBy.Equals("Puntuacion", StringComparison.OrdinalIgnoreCase))
+                    // Ordenar por Fecha
+                    if (parameters.OrderBy.Equals("Fecha", StringComparison.OrdinalIgnoreCase))
                     {
-                        orderByClause = $" ORDER BY Puntuacion {defaultDirection}";
+                        orderByClause = $" ORDER BY FechaComentario {defaultDirection}";
                     }
                     
                 }
@@ -108,6 +108,41 @@ namespace Academia.Api.Repositories
             }
             return opiniones;
         }
+        
+        public async Task<List<Opinion>> GetStats()
+        {
+            var opiniones = new List<Opinion>();
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string query = "SELECT COUNT(*) FROM Opinion;";
+               
+                using (var command = new SqlCommand(query, connection))
+                {
+                    
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var opinion = new Opinion
+                            {
+                                Id = reader.GetInt32(0),
+                                Nombre = reader.GetString(1),
+                                FechaComentario = reader.GetDateTime(2),
+                                Mensaje = reader.GetString(3),
+                                Puntuacion = reader.GetInt32(4),
+                                CursoId = reader.GetInt32(5)
+                            };
+                            opiniones.Add(opinion);
+                        }
+                    }
+                }
+            }
+            return opiniones;
+        }
+
 
         public async Task<Opinion?> GetByIdAsync(int id)
         {
