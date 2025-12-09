@@ -59,9 +59,9 @@ namespace Academia.Api.Repositories
                 string orderByClause = "";
 
                 // WHERE para el filtro por puntuacion
-                if (!string.IsNullOrEmpty(parameters.Puntuacion))
+                if (!string.IsNullOrEmpty(parameters.minPuntuacion))
                 {
-                    whereClause = " WHERE Puntuacion LIKE @Puntuacion";
+                    whereClause = " WHERE Puntuacion > @Puntuacion";
                 }
 
                 // ORDER BY
@@ -83,9 +83,9 @@ namespace Academia.Api.Repositories
                 using (var command = new SqlCommand(query, connection))
                 {
                     // Añadir parámetro SQL para el filtro WHERE
-                    if (!string.IsNullOrEmpty(parameters.Puntuacion))
+                    if (!string.IsNullOrEmpty(parameters.minPuntuacion))
                     {
-                        command.Parameters.AddWithValue("@Puntuacion", $"%{parameters.Puntuacion}%");
+                        command.Parameters.AddWithValue("@Puntuacion", $"%{parameters.minPuntuacion}%");
                     }
 
                     using (var reader = await command.ExecuteReaderAsync())

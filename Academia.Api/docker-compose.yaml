@@ -6,7 +6,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-CU21-ubuntu-20.04
     container_name: sqlserver
     ports:
-      - "3667:1433"
+      - "7863:1433"
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=tuContraseñaSegura1234$
@@ -22,7 +22,7 @@ services:
       dockerfile: Dockerfile
     container_name: dotnet_api
     ports:
-      - "7663:5000"
+      - "7763:5000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__AcademiaDB=Server=sqlserver,1433;Database=AcademiaDB;User Id=sa;Password=tuContraseñaSegura1234$;TrustServerCertificate=True;
