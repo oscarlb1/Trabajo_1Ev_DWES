@@ -34,6 +34,14 @@ namespace Academia.Api.Services
             }).ToList();
         }
 
+        public async Task<int> GetStats()
+        {
+            var opiniones = await _opinionRepository.GetStats();
+
+            return opiniones;
+        }
+
+
         public async Task<List<OpinionDTO>> GetAllAsyncParams(OpinionParameters parameters)
         {
             // Validaciones de parámetros

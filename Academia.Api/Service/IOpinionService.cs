@@ -7,6 +7,7 @@ namespace Academia.Api.Services
     {
         Task<List<OpinionDTO>> GetAllAsync();
         Task<List<OpinionDTO>> GetAllAsyncParams(OpinionParameters parameters);
+        Task<int> GetStats();
         Task<OpinionDTO?> GetByIdAsync(int id);
         Task<OpinionDTO> AddAsync(OpinionCreateDTO opinionCreateDTO);
         Task UpdateAsync(OpinionDTO opinionDTO);

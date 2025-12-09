@@ -108,41 +108,21 @@ namespace Academia.Api.Repositories
             }
             return opiniones;
         }
-        
-        public async Task<List<Opinion>> GetStats()
-        {
-            var opiniones = new List<Opinion>();
 
+        public async Task<int> GetStats()
+        {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-
                 string query = "SELECT COUNT(*) FROM Opinion;";
-               
+
                 using (var command = new SqlCommand(query, connection))
                 {
-                    
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            var opinion = new Opinion
-                            {
-                                Id = reader.GetInt32(0),
-                                Nombre = reader.GetString(1),
-                                FechaComentario = reader.GetDateTime(2),
-                                Mensaje = reader.GetString(3),
-                                Puntuacion = reader.GetInt32(4),
-                                CursoId = reader.GetInt32(5)
-                            };
-                            opiniones.Add(opinion);
-                        }
-                    }
+                    object result = await command.ExecuteScalarAsync();
+                    return Convert.ToInt32(result);
                 }
             }
-            return opiniones;
         }
-
 
         public async Task<Opinion?> GetByIdAsync(int id)
         {

@@ -24,7 +24,7 @@ namespace Academia.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ProfesorDTO>>> GetOpinionesParams([FromQuery] OpinionParameters parameters)
+        public async Task<ActionResult<List<OpinionDTO>>> GetOpinionesParams([FromQuery] OpinionParameters parameters)
         {
             var opiniones = await _opinionService.GetAllAsyncParams(parameters);
 
@@ -33,6 +33,13 @@ namespace Academia.Api.Controllers
                 return NotFound();
             }
 
+            return Ok(opiniones);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<int>> GetOpinionesCount()
+        {
+            var opiniones = await _opinionService.GetStats();
             return Ok(opiniones);
         }
         
