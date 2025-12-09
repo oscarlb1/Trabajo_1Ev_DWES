@@ -107,7 +107,8 @@ namespace Academia.Api.Repositories
             return opinion;
         }
 
-        public async Task UpdateAsync(Curso curso)
+
+         public async Task UpdateAsync(Opinion opinion)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -126,7 +127,7 @@ namespace Academia.Api.Repositories
                 }
             }
         }
-
+        
         public async Task DeleteAsync(int id)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -142,5 +143,7 @@ namespace Academia.Api.Repositories
                 }
             }
         }
+        
+       
     }
 }

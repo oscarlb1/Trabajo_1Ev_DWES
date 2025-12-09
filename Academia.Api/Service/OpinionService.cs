@@ -10,7 +10,7 @@ namespace Academia.Api.Services
         private readonly ICursoRepository _cursoRepository;
  
 
-        public CursoService(
+        public OpinionService(
             IOpinionRepository opinionRepository,
             ICursoRepository cursoRepository)   
         {
@@ -33,7 +33,7 @@ namespace Academia.Api.Services
             }).ToList();
         }
 
-        public async Task<OpiinionDTO?> GetByIdAsync(int id)
+        public async Task<OpinionDTO?> GetByIdAsync(int id)
         {
             if (id <= 0)
                 throw new ArgumentException("El ID debe ser mayor que cero.");
@@ -102,7 +102,7 @@ namespace Academia.Api.Services
             var cursoExiste = await _cursoRepository.GetByIdAsync(opinionDTO.CursoId);
             if (cursoExiste == null)
             {
-                throw new KeyNotFoundException($"El curso con ID {cursoDTO.MateriaId} no existe.");
+                throw new KeyNotFoundException($"El curso con ID {opinionDTO.CursoId} no existe.");
             }
 
             var opinion = new Opinion
