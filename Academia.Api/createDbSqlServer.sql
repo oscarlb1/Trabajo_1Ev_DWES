@@ -89,12 +89,6 @@ CREATE TABLE Opinion (
     FOREIGN KEY (CursoId) REFERENCES Curso(Id)
 );
 
-INSERT INTO Opinion (Nombre, FechaComentario, Mensaje, Puntuacion, CursoId) VALUES
-('Andrea Martínez', '2010-08-20 09:00:00', 'Me encanta este curso.', 4, 1),
-('Carlos Ruiz', '2010-08-20 09:00:00', 'Muy bueno este curso.', 5, 2);
-
-
-
 INSERT INTO Usuario (Nombre, Email, Creditos, Cursos, Premium, Registro) VALUES
 ('Andrea Martínez', 'andrea.martinez@email.com', 50.50, 2, 1, '2024-01-15 10:00:00'),
 ('Carlos Ruiz', 'carlos.ruiz@email.com', 10.00, 0, 0, '2024-03-01 15:30:00');
@@ -118,3 +112,10 @@ INSERT INTO Leccion (Titulo, Tipo, Minutos, Examen, Publicacion, URL, CursoId) V
 INSERT INTO Inscripcion (Progreso, Comentario, Nota, Activa, Inscripcion, UsuarioId, CursoId) VALUES
 ('En progreso', 'El módulo de validación es complejo.', 0.00, 1, '2024-04-01 18:00:00', 1, 1),
 ('Completado', 'Excelente contenido.', 9.50, 0, '2024-03-15 09:00:00', 2, 2);
+
+-- AUTORIA --
+
+INSERT INTO Opinion (Nombre, FechaComentario, Mensaje, Puntuacion, CursoId) VALUES
+('Andrea Martínez', '2010-08-20 09:00:00', 'Me encanta este curso.', 4, 1),
+('Carlos Ruiz', '2010-08-20 09:00:00', 'Muy bueno este curso.', 5, 2);
+

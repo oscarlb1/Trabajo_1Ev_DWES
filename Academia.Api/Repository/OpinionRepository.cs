@@ -83,9 +83,9 @@ namespace Academia.Api.Repositories
                 using (var command = new SqlCommand(query, connection))
                 {
                     // Añadir parámetro SQL para el filtro WHERE
-                    if (!string.IsNullOrEmpty(parameters.minPuntuacion))
+                    if (int.TryParse(parameters.minPuntuacion, out int minScore))
                     {
-                        command.Parameters.AddWithValue("@Puntuacion", $"%{parameters.minPuntuacion}%");
+                        command.Parameters.AddWithValue("@Puntuacion", minScore);
                     }
 
                     using (var reader = await command.ExecuteReaderAsync())

@@ -16,14 +16,14 @@ namespace Academia.Api.Controllers
             _opinionService = opinionService;
         }
 
-        [HttpGet]
+        [HttpGet("getAllOpinions")]
         public async Task<ActionResult<List<OpinionDTO>>> GetOpiniones()
         {
             var opiniones = await _opinionService.GetAllAsync();
             return Ok(opiniones);
         }
 
-        [HttpGet]
+        [HttpGet("filters")]
         public async Task<ActionResult<List<OpinionDTO>>> GetOpinionesParams([FromQuery] OpinionParameters parameters)
         {
             var opiniones = await _opinionService.GetAllAsyncParams(parameters);
@@ -36,7 +36,7 @@ namespace Academia.Api.Controllers
             return Ok(opiniones);
         }
 
-        [HttpGet]
+        [HttpGet("totalOpiniones")]
         public async Task<ActionResult<int>> GetOpinionesCount()
         {
             var opiniones = await _opinionService.GetStats();
