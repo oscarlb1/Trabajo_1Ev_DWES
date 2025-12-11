@@ -46,9 +46,9 @@ namespace Academia.Api.Services
         {
             // Validaciones de parámetros
             if (!string.IsNullOrEmpty(parameters.OrderBy) && 
-                parameters.OrderBy != "Puntuacion")
+                parameters.OrderBy != "Fecha")
             {
-                throw new ArgumentException("El campo de ordenamiento no es válido. Use 'Puntuacion'.");
+                throw new ArgumentException("El campo de ordenamiento no es válido. Use 'Fecha'.");
             }
 
             var opiniones = await _opinionRepository.GetAllAsyncParams(parameters);

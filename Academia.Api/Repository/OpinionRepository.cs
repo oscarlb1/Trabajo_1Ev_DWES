@@ -1,6 +1,8 @@
 using System.Data.SqlClient;
 using Academia.Api.Models;
 using Academia.Api.Models.QueryParameters;
+using System.Data.SqlClient;
+
 namespace Academia.Api.Repositories
 {
     public class OpinionRepository : IOpinionRepository
@@ -61,7 +63,7 @@ namespace Academia.Api.Repositories
                 // WHERE para el filtro por puntuacion mínima
                 if (!string.IsNullOrEmpty(parameters.minPuntuacion))
                 {
-                    whereClause = " WHERE Puntuacion > @Puntuacion";
+                    whereClause = " WHERE Puntuacion >= @Puntuacion";
                 }
 
                 // ORDER BY
