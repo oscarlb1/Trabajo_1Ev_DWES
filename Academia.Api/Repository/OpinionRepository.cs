@@ -2,6 +2,7 @@ using System.Data.SqlClient;
 using Academia.Api.Models;
 using Academia.Api.Models.QueryParameters;
 using System.Data.SqlClient;
+using Academia.Api.Models.DTO;
 
 namespace Academia.Api.Repositories
 {
@@ -111,18 +112,31 @@ namespace Academia.Api.Repositories
             return opiniones;
         }
 
-        public async Task<int> GetStats()
+        public async Task<OpinionStatsDTO> GetStats()
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                string query = "SELECT COUNT(*) FROM Opinion;";
+                string query = @"
+            SELECT COUNT(*) AS Total, AVG(CAST(Puntuacion AS DECIMAL(10, 2))) AS Media, MIN(Puntuacion) AS Minima, MAX(Puntuacion) AS Maxima FROM Opinion;";
 
                 using (var command = new SqlCommand(query, connection))
                 {
-                    object result = await command.ExecuteScalarAsync();
-                    return Convert.ToInt32(result);
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            return new OpinionStatsDTO
+                            {
+                                TotalOpiniones = reader.GetInt32(reader.GetOrdinal("Total")),
+                                PuntuacionMedia = reader.IsDBNull(reader.GetOrdinal("Media")) ? 0 : reader.GetDecimal(reader.GetOrdinal("Media")),
+                                PuntuacionMinima = reader.IsDBNull(reader.GetOrdinal("Minima")) ? 0 : reader.GetInt32(reader.GetOrdinal("Minima")),
+                                PuntuacionMaxima = reader.IsDBNull(reader.GetOrdinal("Maxima")) ? 0 : reader.GetInt32(reader.GetOrdinal("Maxima"))
+                            };
+                        }
+                    }
                 }
+                return new OpinionStatsDTO();
             }
         }
 

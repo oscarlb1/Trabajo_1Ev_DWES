@@ -34,7 +34,7 @@ namespace Academia.Api.Services
             }).ToList();
         }
 
-        public async Task<int> GetStats()
+        public async Task<OpinionStatsDTO> GetStats()
         {
             var opiniones = await _opinionRepository.GetStats();
 

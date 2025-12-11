@@ -37,12 +37,17 @@ namespace Academia.Api.Controllers
         }
 
         [HttpGet("totalOpiniones")]
-        public async Task<ActionResult<int>> GetOpinionesCount()
+          public async Task<ActionResult<OpinionStatsDTO>> GetOpinionesStats()
         {
-            var opiniones = await _opinionService.GetStats();
-            return Ok(opiniones);
+            var stats = await _opinionService.GetStats();
+
+            if (stats.TotalOpiniones == 0)
+            {
+                return Ok(stats);
+            }
+            return Ok(stats);
         }
-        
+
         [HttpGet("{id}")]
         public async Task<ActionResult<OpinionDTO>> GetOpinion(int id)
         {
